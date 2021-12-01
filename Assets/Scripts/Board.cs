@@ -48,7 +48,20 @@ public class Board : MonoBehaviour
         };
 
         ActivePiece.Initialize(this, spawnPosition, data);
-        Set(ActivePiece);
+        if (IsValidPosition(ActivePiece, spawnPosition))
+        {
+            Set(ActivePiece);
+        }
+        else
+        {
+            GameOver();
+        }
+    }
+
+    private void GameOver()
+    {
+        Tilemap.ClearAllTiles();
+        
     }
 
     public void Set(Piece piece)
