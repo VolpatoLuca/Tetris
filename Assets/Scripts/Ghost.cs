@@ -22,6 +22,7 @@ public class Ghost : MonoBehaviour
     private void LateUpdate()
     {
         Clear();
+        if (trackingPiece.isLocked) return;
         Copy();
         Drop();
         Set();
@@ -67,6 +68,7 @@ public class Ghost : MonoBehaviour
             }
         }
 
+        print("ghost set");
         board.Set(trackingPiece);
     }
 

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections;
+using System.Threading.Tasks;
 
 public class Board : MonoBehaviour
 {
@@ -10,6 +12,10 @@ public class Board : MonoBehaviour
     public Piece ActivePiece { get; private set; }
     public TetrominoData[] tetrominoes;
     public Vector2Int boardSize = new Vector2Int(10, 20);
+
+    public Color test;
+    public TileBase square;
+    public float destroyTime;
 
     public RectInt Bounds
     {
@@ -61,7 +67,7 @@ public class Board : MonoBehaviour
     private void GameOver()
     {
         Tilemap.ClearAllTiles();
-        
+
     }
 
     public void Set(Piece piece)
@@ -100,44 +106,99 @@ public class Board : MonoBehaviour
         return true;
     }
 
-    public void ClearLines()
+    public async Task TryClearLines()
     {
         RectInt bounds = Bounds;
         int row = bounds.yMin;
+        List<int> rowsToClear = new List<int>();
         while (row < bounds.yMax)
         {
-            if (IsLineFull(row))
+            bool isRowFull = IsLineFull(row);
+            if (isRowFull)
             {
-                LineClear(row);
+                rowsToClear.Add(row);
             }
-            else
+            row++;
+        }
+
+        if (rowsToClear.Count > 0)
+            await LineClear(rowsToClear);
+        else
+            await Task.Yield();
+    }
+
+    private async Task LineClear(List<int> rowsToClear)
+    {
+        RectInt bounds = Bounds;
+        for (int i = 0; i < rowsToClear.Count; i++)
+        {
+            int row = rowsToClear[i];
+            for (int col = bounds.xMin; col < bounds.xMax; col++)
             {
+                Vector3Int position = new Vector3Int(col, row, 0);
+                Tilemap.SetTile(position, square);
+
+            }
+        }
+
+        await FlashRows(rowsToClear);
+
+        SetTileOnRows(rowsToClear, null);
+
+        for (int j = 0; j < rowsToClear.Count; j++)
+        {
+            rowsToClear[j] -= j;
+        }
+        for (int i = 0; i < rowsToClear.Count; i++)
+        {
+            int row = rowsToClear[i];
+            while (row < bounds.yMax)
+            {
+                for (int col = bounds.xMin; col < bounds.xMax; col++)
+                {
+                    Vector3Int position = new Vector3Int(col, row + 1, 0);
+                    TileBase above = Tilemap.GetTile(position);
+
+                    position = new Vector3Int(col, row, 0);
+                    Tilemap.SetTile(position, above);
+                }
                 row++;
             }
         }
+
     }
 
-    private void LineClear(int row)
+    private async Task FlashRows(List<int> rowsToClear)
+    {
+        float t = 0;
+        float n = 0;
+        while (t < 1)
+        {
+            if (Mathf.RoundToInt(n) % 2 == 0)
+            {
+                SetTileOnRows(rowsToClear, null);
+            }
+            else
+            {
+                SetTileOnRows(rowsToClear, square);
+            }
+            n += 0.25f;
+            t += Time.deltaTime;
+            await Task.Yield();
+        }
+    }
+
+    private void SetTileOnRows(List<int> rowsToClear, TileBase tile)
     {
         RectInt bounds = Bounds;
-        for (int col = bounds.xMin; col < bounds.xMax; col++)
+        for (int i = 0; i < rowsToClear.Count; i++)
         {
-            Vector3Int position = new Vector3Int(col, row, 0);
-            Tilemap.SetTile(position, null);
-        }
-
-        while (row < bounds.yMax)
-        {
+            int row = rowsToClear[i];
             for (int col = bounds.xMin; col < bounds.xMax; col++)
             {
-                Vector3Int position = new Vector3Int(col, row + 1, 0);
-                TileBase above = Tilemap.GetTile(position);
-
-                position = new Vector3Int(col, row, 0);
-                Tilemap.SetTile(position, above);
+                Vector3Int position = new Vector3Int(col, row, 0);
+                Tilemap.SetTile(position, tile);
             }
-
-            row++;
         }
     }
 

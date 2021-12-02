@@ -244,6 +244,9 @@ MonoBehaviour:
   - tetromino: 6
     tile: {fileID: 11400000, guid: 9a96b9a33f63b6645bf1448eadef4c7d, type: 2}
   boardSize: {x: 10, y: 20}
+  test: {r: 0, g: 0, b: 0, a: 0}
+  square: {fileID: 11400000, guid: 2894879050d925947be1921984631099, type: 2}
+  destroyTime: 0.3
 --- !u!156049354 &98144352
 Grid:
   m_ObjectHideFlags: 0
