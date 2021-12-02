@@ -17,7 +17,7 @@ public class Piece : MonoBehaviour
     private float stepTime;
     private float lockTime;
 
-    public bool isLocked;
+    public bool IsLocked { get; private set; }
 
     public void Initialize(Board board, Vector3Int position, TetrominoData data)
     {
@@ -27,7 +27,7 @@ public class Piece : MonoBehaviour
         RotationIndex = 0;
         stepTime = Time.time + stepDelay;
         lockTime = 0;
-        isLocked = false;
+        IsLocked = false;
 
         if (Cells == null)
         {
@@ -42,7 +42,7 @@ public class Piece : MonoBehaviour
 
     private void Update()
     {
-        if(isLocked) return;
+        if(IsLocked) return;
         Board.Clear(this);
 
         lockTime += Time.deltaTime;
@@ -54,7 +54,7 @@ public class Piece : MonoBehaviour
             Step();
         }
 
-        if(isLocked) return;
+        if(IsLocked) return;
         Board.Set(this);
     }
 
@@ -72,7 +72,7 @@ public class Piece : MonoBehaviour
 
     private async void Lock()
     {
-        isLocked = true;
+        IsLocked = true;
         Board.Set(this);
         await Board.TryClearLines();
         Board.SpawnPiece();

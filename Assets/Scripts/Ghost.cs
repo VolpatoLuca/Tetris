@@ -22,7 +22,7 @@ public class Ghost : MonoBehaviour
     private void LateUpdate()
     {
         Clear();
-        if (trackingPiece.isLocked) return;
+        if (trackingPiece.IsLocked) return;
         Copy();
         Drop();
         Set();

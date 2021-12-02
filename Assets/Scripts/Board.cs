@@ -13,8 +13,7 @@ public class Board : MonoBehaviour
     public TetrominoData[] tetrominoes;
     public Vector2Int boardSize = new Vector2Int(10, 20);
 
-    public Color test;
-    public TileBase square;
+    public TileBase destroyedTile;
     public float destroyTime;
 
     public RectInt Bounds
@@ -136,7 +135,7 @@ public class Board : MonoBehaviour
             for (int col = bounds.xMin; col < bounds.xMax; col++)
             {
                 Vector3Int position = new Vector3Int(col, row, 0);
-                Tilemap.SetTile(position, square);
+                Tilemap.SetTile(position, destroyedTile);
 
             }
         }
@@ -172,7 +171,7 @@ public class Board : MonoBehaviour
     {
         float t = 0;
         float n = 0;
-        while (t < 1)
+        while (t < destroyTime)
         {
             if (Mathf.RoundToInt(n) % 2 == 0)
             {
@@ -180,7 +179,7 @@ public class Board : MonoBehaviour
             }
             else
             {
-                SetTileOnRows(rowsToClear, square);
+                SetTileOnRows(rowsToClear, destroyedTile);
             }
             n += 0.25f;
             t += Time.deltaTime;
