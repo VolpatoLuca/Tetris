@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Piece : MonoBehaviour
@@ -18,6 +19,7 @@ public class Piece : MonoBehaviour
     private float lockTime;
 
     public bool IsLocked { get; private set; }
+    
 
     public void Initialize(Board board, Vector3Int position, TetrominoData data)
     {
@@ -70,12 +72,12 @@ public class Piece : MonoBehaviour
         }
     }
 
-    private async void Lock()
+    private void Lock()
     {
         IsLocked = true;
         Board.Set(this);
-        await Board.TryClearLines();
-        Board.SpawnPiece();
+        Board.PieceLocked();
+        
     }
 
     private void GetInput()
@@ -177,7 +179,7 @@ public class Piece : MonoBehaviour
         Lock();
     }
 
-    private bool Move(Vector2Int translation)
+    public bool Move(Vector2Int translation)
     {
         Vector3Int newPosition = Position;
         newPosition.x += translation.x;

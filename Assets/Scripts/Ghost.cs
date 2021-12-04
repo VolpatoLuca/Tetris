@@ -68,7 +68,6 @@ public class Ghost : MonoBehaviour
             }
         }
 
-        print("ghost set");
         board.Set(trackingPiece);
     }
 
