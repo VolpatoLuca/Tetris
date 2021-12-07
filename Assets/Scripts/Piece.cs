@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Piece : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Piece : MonoBehaviour
     public Vector3Int[] Cells { get; private set; }
     public Vector3Int Position { get; private set; }
     public int RotationIndex { get; private set; }
+    public bool IsLocked { get; private set; }
 
     public float stepDelay = 1;
     public float lockDelay = 0.5f;
@@ -18,8 +20,7 @@ public class Piece : MonoBehaviour
     private float stepTime;
     private float lockTime;
 
-    public bool IsLocked { get; private set; }
-    
+
 
     public void Initialize(Board board, Vector3Int position, TetrominoData data)
     {
@@ -44,7 +45,7 @@ public class Piece : MonoBehaviour
 
     private void Update()
     {
-        if(IsLocked) return;
+        if (IsLocked) return;
         Board.Clear(this);
 
         lockTime += Time.deltaTime;
@@ -56,7 +57,7 @@ public class Piece : MonoBehaviour
             Step();
         }
 
-        if(IsLocked) return;
+        if (IsLocked) return;
         Board.Set(this);
     }
 
@@ -77,19 +78,27 @@ public class Piece : MonoBehaviour
         IsLocked = true;
         Board.Set(this);
         Board.PieceLocked();
-        
+
+    }
+
+    public void SetMovement(InputAction.CallbackContext ctx)
+    {
+        print(ctx);
+        Move(Vector2Int.right * ctx.ReadValue<int>());
     }
 
     private void GetInput()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Move(Vector2Int.left);
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Move(Vector2Int.right);
-        }
+
+
+        //if (Input.GetKeyDown(KeyCode.A))
+        //{
+        //    Move(Vector2Int.left);
+        //}
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    Move(Vector2Int.right);
+        //}
         if (Input.GetKeyDown(KeyCode.S))
         {
             Move(Vector2Int.down);

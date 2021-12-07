@@ -1,0 +1,77 @@
+{
+    "name": "PlayerInput",
+    "maps": [
+        {
+            "name": "TetrisControls",
+            "id": "83ee88a6-66da-404a-b86a-c0167a3bda29",
+            "actions": [
+                {
+                    "name": "Movement",
+                    "type": "Button",
+                    "id": "19df75df-6cac-470d-b006-f7c77e884f25",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3f6a3900-1c02-40ad-9f01-50b01d2f09ef",
+                    "path": "<Keyboard>/a",
+                    "interactions": "Press",
+                    "processors": "Invert",
+                    "groups": "LeftKeyboard",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b3ef3c57-e5df-4321-b5d6-39240450e432",
+                    "path": "<Keyboard>/d",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "LeftKeyboard",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fcc227ce-9033-4363-9558-fc25f8fb9ef1",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "Press",
+                    "processors": "Invert",
+                    "groups": "RightKeyboard",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f7a300c6-8d22-4d5c-a89d-e1569152b4d6",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "RightKeyboard",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "LeftKeyboard",
+            "bindingGroup": "LeftKeyboard",
+            "devices": []
+        },
+        {
+            "name": "RightKeyboard",
+            "bindingGroup": "RightKeyboard",
+            "devices": []
+        }
+    ]
+}
