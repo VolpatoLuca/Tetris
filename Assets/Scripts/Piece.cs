@@ -20,7 +20,9 @@ public class Piece : MonoBehaviour
     private float stepTime;
     private float lockTime;
 
-
+    private void Start()
+    {
+    }
 
     public void Initialize(Board board, Vector3Int position, TetrominoData data)
     {
@@ -80,17 +82,17 @@ public class Piece : MonoBehaviour
         Board.PieceLocked();
 
     }
-
     public void SetMovement(InputAction.CallbackContext ctx)
     {
-        print(ctx);
-        Move(Vector2Int.right * ctx.ReadValue<int>());
+        if(ctx.phase != InputActionPhase.Performed)
+        {
+            return;
+        }
+        MoveDown();
     }
 
     private void GetInput()
     {
-
-
         //if (Input.GetKeyDown(KeyCode.A))
         //{
         //    Move(Vector2Int.left);
@@ -101,7 +103,7 @@ public class Piece : MonoBehaviour
         //}
         if (Input.GetKeyDown(KeyCode.S))
         {
-            Move(Vector2Int.down);
+            MoveDown();
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -115,6 +117,11 @@ public class Piece : MonoBehaviour
         {
             Rotate(1);
         }
+    }
+
+    private void MoveDown()
+    {
+        Move(Vector2Int.down);
     }
 
     private void Rotate(int direction)
