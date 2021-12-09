@@ -2,13 +2,37 @@
     "name": "PlayerInputActions",
     "maps": [
         {
-            "name": "Tetris",
+            "name": "PlayerOne",
             "id": "e998c3f4-84ff-4fd0-b51f-6ca31a2162d6",
             "actions": [
                 {
                     "name": "Move",
                     "type": "Button",
                     "id": "a7001c70-2c5a-4be3-b68d-e933f1b926f9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "HardDrop",
+                    "type": "Button",
+                    "id": "11a5d26f-bf35-4cd5-b2ae-30e10d579329",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Button",
+                    "id": "b0bedede-92a8-45b5-b99d-696e12535322",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Down",
+                    "type": "Button",
+                    "id": "7dd463f6-ced7-4c0b-aedf-d1f89cc19877",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -21,7 +45,7 @@
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "Invert",
-                    "groups": "LeftKeyboard",
+                    "groups": "",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -32,58 +56,163 @@
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": "LeftKeyboard",
+                    "groups": "",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "ec2c4bc5-c8bf-45a8-983c-45ed8a2217de",
+                    "id": "32c06d5b-b7cf-463f-9d98-784813a5ac95",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HardDrop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "378aedaa-faa2-4974-9a03-8ed331ef5ded",
+                    "path": "<Keyboard>/n",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5c0f6c53-ba95-40b3-afa6-29865c2512c4",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8f9c3f55-f29a-4732-9302-a9038281086d",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PlayerTwo",
+            "id": "1ba5dfb2-352a-4350-9fb9-78c9b5369035",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "a361f1e7-4457-41b1-9fff-e19e3dd2a3fb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "HardDrop",
+                    "type": "Button",
+                    "id": "5202093a-21ed-4d6d-a210-18557d600b96",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Button",
+                    "id": "4f965665-c603-455c-832a-9f1635f4bf05",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Down",
+                    "type": "Button",
+                    "id": "b74ae73b-d8e1-4b66-b345-d54a84c495e7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8872e67b-8529-4dbb-b167-7246f56efc8e",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "Invert",
-                    "groups": "RightKeyboard",
+                    "groups": "",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "23435215-a778-4b1d-b0de-fd5c20bda42b",
+                    "id": "581c956e-08fc-4778-9967-89360656c2a8",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "RightKeyboard",
+                    "groups": "",
                     "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3fe44534-f8ab-4782-a64b-91bf7ab42382",
+                    "path": "<Keyboard>/numpad0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HardDrop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e6005eac-8dac-4311-9fdd-3857fd27d071",
+                    "path": "<Keyboard>/numpad2",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5bf8829c-84bd-4d81-af2a-50a135070d3c",
+                    "path": "<Keyboard>/numpad3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "645c596a-ea8e-4657-b8e0-a252fabe64ee",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Down",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
             ]
         }
     ],
-    "controlSchemes": [
-        {
-            "name": "LeftKeyboard",
-            "bindingGroup": "LeftKeyboard",
-            "devices": [
-                {
-                    "devicePath": "<Keyboard>",
-                    "isOptional": true,
-                    "isOR": false
-                }
-            ]
-        },
-        {
-            "name": "RightKeyboard",
-            "bindingGroup": "RightKeyboard",
-            "devices": [
-                {
-                    "devicePath": "<Keyboard>",
-                    "isOptional": true,
-                    "isOR": false
-                }
-            ]
-        }
-    ]
+    "controlSchemes": []
 }

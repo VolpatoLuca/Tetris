@@ -19,10 +19,11 @@ public class Piece : MonoBehaviour
 
     private float stepTime;
     private float lockTime;
+    private Vector2Int bufferedMovement;
+    private bool hardDrop = false;
+    private bool down = false;
+    private int bufferedRotation = 0;
 
-    private void Start()
-    {
-    }
 
     public void Initialize(Board board, Vector3Int position, TetrominoData data)
     {
@@ -80,51 +81,65 @@ public class Piece : MonoBehaviour
         IsLocked = true;
         Board.Set(this);
         Board.PieceLocked();
+        Board.Set(this);
 
     }
     public void SetMovement(InputAction.CallbackContext ctx)
     {
-        if(ctx.phase != InputActionPhase.Performed)
-        {
+        if (ctx.phase != InputActionPhase.Performed)
             return;
-        }
-        MoveDown();
+        bufferedMovement = Vector2Int.right * (int)ctx.ReadValue<float>();
     }
+
+    public void SetHardDrop(InputAction.CallbackContext ctx)
+    {
+        if (ctx.phase != InputActionPhase.Performed)
+            return;
+        hardDrop = true;
+    }
+    public void SetRotation(InputAction.CallbackContext ctx)
+    {
+        if (ctx.phase != InputActionPhase.Performed)
+            return;
+        bufferedRotation = (int)ctx.ReadValue<float>();
+    }
+    public void SetDown(InputAction.CallbackContext ctx)
+    {
+        if (ctx.phase != InputActionPhase.Performed)
+            return;
+        down = true;
+    }
+
 
     private void GetInput()
     {
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    Move(Vector2Int.left);
-        //}
-        //if (Input.GetKeyDown(KeyCode.D))
-        //{
-        //    Move(Vector2Int.right);
-        //}
-        if (Input.GetKeyDown(KeyCode.S))
+        //MOVEMENT
+        if (bufferedMovement != Vector2Int.zero)
         {
-            MoveDown();
+            Move(bufferedMovement);
+            bufferedMovement = Vector2Int.zero;
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        //DOWN
+        if (down)
+        {
+            Move(Vector2Int.down);
+            down = false;
+        }
+        //HARDDROP
+        if (hardDrop)
         {
             HardDrop();
+            hardDrop = false;
         }
-        if (Input.GetKeyDown(KeyCode.Q))
+        //ROTATE
+        if (bufferedRotation != 0)
         {
-            Rotate(-1);
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Rotate(1);
+            Rotate(bufferedRotation);
+            bufferedRotation = 0;
         }
     }
 
-    private void MoveDown()
-    {
-        Move(Vector2Int.down);
-    }
-
-    private void Rotate(int direction)
+    public void Rotate(int direction)
     {
         int originalRotation = RotationIndex;
         RotationIndex = Wrap(RotationIndex + direction, 0, 4);
@@ -185,14 +200,13 @@ public class Piece : MonoBehaviour
         return Wrap(wallKickIndex, 0, TetrominoData.wallKicks.GetLength(0));
     }
 
-    private void HardDrop()
+    public void HardDrop()
     {
         while (Move(Vector2Int.down))
         {
             continue;
         }
-
-        Lock();
+        lockTime = lockDelay * 0.7f;
     }
 
     public bool Move(Vector2Int translation)
@@ -206,7 +220,6 @@ public class Piece : MonoBehaviour
             Position = newPosition;
             lockTime = 0f;
         }
-
         return valid;
     }
 

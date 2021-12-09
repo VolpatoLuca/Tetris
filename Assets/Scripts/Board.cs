@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 using System.Threading.Tasks;
 
@@ -10,15 +12,21 @@ public class Board : MonoBehaviour
 {
     public Tilemap Tilemap { get; private set; }
     public Piece ActivePiece { get; private set; }
+    public Task ClearingLines { get; private set; }
+    public int Score { get; private set; }
+    public int CurrentLevel { get; private set; }
     public TetrominoData[] tetrominoes;
     public Vector2Int boardSize = new Vector2Int(10, 20);
-
+    public Vector3Int nextPiecePosition = new Vector3Int(10, 10, 0);
     public TileBase destroyedTile;
     public float destroyTime;
     public TileBase incrementTile;
-
+    public Board otherBoard;
+    public TMP_Text levelText;
+    public TMP_Text scoreText;
     private List<int> tetrominoesID = new List<int>();
-    public Task ClearingLines { get; private set; }
+    private TetrominoData nextPiece;
+    private int currentLinesCompleted = 0;
 
     public RectInt Bounds
     {
@@ -28,6 +36,7 @@ public class Board : MonoBehaviour
             return new RectInt(position, boardSize);
         }
     }
+
 
     private void Awake()
     {
@@ -41,35 +50,19 @@ public class Board : MonoBehaviour
 
     private void Start()
     {
+        Score = 0;
+        currentLinesCompleted = 0;
+        CurrentLevel = 1;
+        nextPiece = GetRandomPiece();
         SpawnPiece();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Increment(2, 0);
-        }
+        scoreText.text = $"Score: {Score}";
+        levelText.text = $"Level: {CurrentLevel}";
     }
 
     public void SpawnPiece()
     {
-        if (tetrominoesID.Count == 0)
-        {
-            for (int i = 0; i < tetrominoes.Length; i++)
-            {
-                tetrominoesID.Add(i);
-            }
-            for (int i = tetrominoes.Length - 1; i > 0; i--)
-            {
-                int j = Random.Range(0, i + 1);
-                (tetrominoesID[i], tetrominoesID[j]) = (tetrominoesID[j], tetrominoesID[i]);
-            }
-        }
-        int random = Random.Range(0, tetrominoesID.Count);
-        
-        TetrominoData data = tetrominoes[tetrominoesID[random]];
-        tetrominoesID.RemoveAt(random);
+
+        TetrominoData data = nextPiece;
 
         Vector3Int spawnPosition = new Vector3Int()
         {
@@ -87,6 +80,31 @@ public class Board : MonoBehaviour
         {
             GameOver();
         }
+
+        Clear(nextPiece, nextPiecePosition);
+        nextPiece = GetRandomPiece();
+    }
+
+    private TetrominoData GetRandomPiece()
+    {
+        if (tetrominoesID.Count == 0)
+        {
+            for (int i = 0; i < tetrominoes.Length; i++)
+            {
+                tetrominoesID.Add(i);
+            }
+            for (int i = tetrominoes.Length - 1; i > 0; i--)
+            {
+                int j = Random.Range(0, i + 1);
+                (tetrominoesID[i], tetrominoesID[j]) = (tetrominoesID[j], tetrominoesID[i]);
+            }
+        }
+        int random = Random.Range(0, tetrominoesID.Count);
+
+        TetrominoData data = tetrominoes[tetrominoesID[random]];
+        tetrominoesID.RemoveAt(random);
+        Set(data, nextPiecePosition);
+        return data;
     }
 
     public async void PieceLocked()
@@ -110,12 +128,28 @@ public class Board : MonoBehaviour
             Tilemap.SetTile(tilePosition, piece.TetrominoData.tile);
         }
     }
+    public void Set(TetrominoData piece, Vector3Int position)
+    {
+        for (int i = 0; i < piece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = (Vector3Int)piece.cells[i] + position;
+            Tilemap.SetTile(tilePosition, piece.tile);
+        }
+    }
 
     public void Clear(Piece piece)
     {
         for (int i = 0; i < piece.Cells.Length; i++)
         {
             Vector3Int tilePosition = piece.Cells[i] + piece.Position;
+            Tilemap.SetTile(tilePosition, null);
+        }
+    }
+    public void Clear(TetrominoData piece, Vector3Int position)
+    {
+        for (int i = 0; i < piece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = (Vector3Int)piece.cells[i] + position;
             Tilemap.SetTile(tilePosition, null);
         }
     }
@@ -154,12 +188,12 @@ public class Board : MonoBehaviour
         }
 
         if (rowsToClear.Count > 0)
-            await LineClear(rowsToClear);
+            await CearLines(rowsToClear);
         else
             await Task.Yield();
     }
 
-    private async Task LineClear(List<int> rowsToClear)
+    private async Task CearLines(List<int> rowsToClear)
     {
         RectInt bounds = Bounds;
         for (int i = 0; i < rowsToClear.Count; i++)
@@ -198,9 +232,20 @@ public class Board : MonoBehaviour
             }
         }
 
+        currentLinesCompleted += rowsToClear.Count;
+        if(currentLinesCompleted >= 10)
+        {
+            currentLinesCompleted -= 10;
+            CurrentLevel++;
+        }
+        Score += 50 * Factorial(rowsToClear.Count) * (CurrentLevel + 1);
+        otherBoard.Increment(rowsToClear.Count, Random.Range(bounds.xMin, bounds.xMax));
+
+        scoreText.text = $"Score: {Score}";
+        levelText.text = $"Level: {CurrentLevel}";
     }
 
-    private async Task FlashRows(List<int> rowsToClear)
+    private async Task FlashRows(List<int> rowsToClear) 
     {
         float t = 0;
         float n = 0;
@@ -214,7 +259,7 @@ public class Board : MonoBehaviour
             {
                 SetTileOnRows(rowsToClear, destroyedTile);
             }
-            n += 0.25f;
+            n += 0.15f;
             t += Time.deltaTime;
             await Task.Yield();
         }
@@ -251,7 +296,8 @@ public class Board : MonoBehaviour
 
     public async void Increment(int rowsAmount, int column)
     {
-        await ClearingLines;
+        if (ClearingLines != null)
+            await ClearingLines;
         //MOVE EVERYTHING UP
         RectInt bounds = Bounds;
         int row = bounds.yMax + rowsAmount;
@@ -306,5 +352,15 @@ public class Board : MonoBehaviour
 
         return Tilemap.GetTile(position);
 
+    }
+
+    private int Factorial(int n)
+    {
+        int factorial = 1;
+        for (int i = 1; i <= n; i++)
+        {
+            factorial *= i;
+        }
+        return factorial;
     }
 }
